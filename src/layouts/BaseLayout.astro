@@ -23,7 +23,10 @@ const isAuthenticated = Astro.cookies.has('auth_token');
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <link rel="stylesheet" href="/src/styles.css" />
+    <!-- Import Tailwind CSS via Astro's import system -->
+    <style global>
+      @import '../styles.css';
+    </style>
     <script is:inline>
       // Initialize theme from localStorage or system preference
       const theme = localStorage.getItem('theme') || 
