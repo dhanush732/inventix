@@ -1,0 +1,16 @@
+---
+// Check if user is logged in
+const isLoggedIn = Astro.cookies.has('auth_token');
+
+// Set redirect URL based on login status
+const redirectUrl = isLoggedIn ? '/products' : '/login';
+---
+
+<html>
+<head>
+  <meta http-equiv="refresh" content={`0;url=${redirectUrl}`} />
+</head>
+<body>
+  <p>Redirecting to {redirectUrl}...</p>
+</body>
+</html>

@@ -1,0 +1,89 @@
+---
+// Simple login component with default username/password
+import { z } from 'zod';
+
+// Define default credentials - in a real app this would be secured
+const DEFAULT_USERNAME = 'admin';
+const DEFAULT_PASSWORD = 'admin';
+
+let error = '';
+let redirectTo = '';
+
+// Handle form submission
+if (Astro.request.method === 'POST') {
+  try {
+    const data = await Astro.request.formData();
+    const username = data.get('username')?.toString();
+    const password = data.get('password')?.toString();
+    
+    // Validate credentials
+    if (username === DEFAULT_USERNAME && password === DEFAULT_PASSWORD) {
+      // Set a cookie to indicate logged in status
+      Astro.cookies.set('auth_token', 'authenticated', {
+        path: '/',
+        maxAge: 60 * 60 * 24, // 1 day
+        httpOnly: true,
+        sameSite: 'strict'
+      });
+      
+      // Set redirect flag instead of redirecting directly
+      redirectTo = '/products';
+    } else {
+      error = 'Invalid username or password';
+    }
+  } catch (e) {
+    // Handle errors
+    error = e instanceof Error ? e.message : 'An error occurred';
+  }
+}
+---
+
+<div class="bg-white dark:bg-slate-800/50 rounded-lg p-8 shadow-lg border border-slate-200 dark:border-slate-700">
+  {redirectTo && (
+    <meta http-equiv="refresh" content={`0;url=${redirectTo}`} />
+  )}
+  <form method="POST" class="space-y-6">
+    {error && (
+      <div class="bg-red-500/20 border border-red-500/50 text-red-600 dark:text-red-400 p-3 rounded-md text-sm">
+        {error}
+      </div>
+    )}
+    
+    <div>
+      <label for="username" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Username</label>
+      <input 
+        type="text" 
+        id="username" 
+        name="username" 
+        value={DEFAULT_USERNAME}
+        class="input w-full" 
+        required
+      />
+      <p class="text-xs text-slate-500 mt-1">Use default: {DEFAULT_USERNAME}</p>
+    </div>
+    
+    <div>
+      <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Password</label>
+      <input 
+        type="password" 
+        id="password" 
+        name="password" 
+        value={DEFAULT_PASSWORD}
+        class="input w-full" 
+        required
+      />
+      <p class="text-xs text-slate-500 mt-1">Use default: {DEFAULT_PASSWORD}</p>
+    </div>
+    
+    <button 
+      type="submit" 
+      class="btn-primary w-full py-2.5"
+    >
+      Sign in
+    </button>
+    
+    <div class="text-center text-xs text-slate-500">
+      <p>This is a demo application. No real authentication is implemented.</p>
+    </div>
+  </form>
+</div>

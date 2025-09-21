@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductsPage from '../ui/ProductsPage';
+
+// Handle authentication here rather than in the layout
+const isAuthenticated = Astro.cookies.has('auth_token');
+let redirectUrl = '';
+
+if (!isAuthenticated) {
+  redirectUrl = '/login';
+}
+---
+
+{redirectUrl && <meta http-equiv="refresh" content={`0;url=${redirectUrl}`} />}
+
+{!redirectUrl && (
+  <BaseLayout title="Product Inventory Management">
+    <ProductsPage client:load />
+  </BaseLayout>
+)}

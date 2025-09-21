@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LoginForm from '../components/LoginForm.astro';
+
+// If already logged in, redirect to products
+const isLoggedIn = Astro.cookies.has('auth_token');
+
+// Avoid sending redirects from components that may be nested
+let redirectUrl = '';
+if (isLoggedIn) {
+  redirectUrl = '/products';
+}
+---
+
+<BaseLayout title="Login | Product Inventory">
+  {redirectUrl && <meta http-equiv="refresh" content={`0;url=${redirectUrl}`} />}
+  
+  <div class="min-h-[70vh] flex items-center justify-center">
+    <div class="max-w-md w-full mx-auto">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold">
+          <span class="text-primary-400">Product</span> Inventory
+        </h1>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-2">Login to manage your product catalog</p>
+      </div>
+      <LoginForm />
+    </div>
+  </div>
+</BaseLayout>
