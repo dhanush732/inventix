@@ -4,7 +4,7 @@ import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
-  output: 'server',
+  output: 'static',
   adapter: node({ mode: 'standalone' }),
   integrations: [react(), tailwind()],
   server: { port: 4321 }
